@@ -1,0 +1,14 @@
+---
+- name: Setup Mac Development Environment
+  hosts: local
+  become: no 
+  vars:
+    ansible_python_interpreter: /usr/bin/python3 
+
+  roles:
+    - core
+    - terminal
+    - zsh
+    - tmux
+    - neovim
+    - config

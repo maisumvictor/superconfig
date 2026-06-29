@@ -1,0 +1,74 @@
+---
+- name: Updating Homebrew
+  community.general.homebrew:
+    update_homebrew: yes
+
+- name: Add Tap for tfswitch
+  community.general.homebrew_tap:
+    name: warrensbox/tap
+    state: present
+
+- name: Essentials (CLI)
+  community.general.homebrew:
+    name:
+      # shell / terminal utilities
+      - bash
+      - bat
+      - eza
+      - fzf
+      - ripgrep
+      - tree
+      - zoxide
+
+      # dev languages / runtimes
+      - go
+      - node
+
+      # version control
+      - git
+      - gittop
+
+      # cloud CLIs
+      - awscli
+      - aws-vault
+      - azure-cli
+      - doctl
+      - taws
+
+      # containers / kubernetes
+      - helm
+      - hey
+      - k3d
+      - kubectl
+      - kubectx
+      - linkerd
+      - minikube
+      - velero
+
+      # infrastructure as code
+      - terraform
+      - terraform-ls
+#      - tfswitch  # Enable only if needed. Disable terraform first.
+
+      # databases
+      - postgresql@18
+
+      # data processors
+      - jq
+      - yq
+
+      # security / crypto helpers
+      - openssl
+      - pinentry-mac
+
+      # productivity
+      - glow
+      - just
+      - task
+      - taskwarrior-tui
+      - wtfutil
+      - crush
+
+      # language servers (used by Neovim)
+      - gopls
+    state: present

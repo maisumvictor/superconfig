@@ -1,0 +1,44 @@
+---
+- name: Remove any old config to ensure a working env
+  file:
+    path: "{{ ansible_facts['user_dir'] }}/.config/sessionx"
+    state: absent
+
+- name: Clone Tmux Plugin Manager (TPM)
+  git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/tpm"
+    depth: 1
+    update: yes
+
+- name: Copy (.tmux.conf)
+  copy:
+    src: .tmux.conf
+    dest: "{{ ansible_facts['user_dir'] }}/.tmux.conf"
+    mode: '0644'
+
+- name: Add permission to TPM to execute
+  file:
+    path: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/tpm/bin/install_plugins"
+    mode: '0755'
+
+# 2. Plugins Installation
+- name: Install Tmux plugins (Headless)
+  shell: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/tpm/bin/install_plugins"
+  environment:
+    PATH: "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
+    TMUX_PLUGIN_MANAGER_PATH: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/"
+  register: plugin_install
+  changed_when: "'Downloading' in plugin_install.stdout"
+
+# 3. Install SessionX binary 
+- name: Force SessionX new binary to be loaded
+  # Cria uma sessão detached (-d), roda o script com bash novo e fecha
+  shell: "tmux new-session -d '/opt/homebrew/bin/bash ./sessionx.tmux'"
+  args:
+    chdir: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/tmux-sessionx/"
+    # CORREÇÃO: creates indentado dentro de args
+    creates: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/tmux-sessionx/sessionx"
+  environment:
+    PATH: "/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+    TMUX_PLUGIN_MANAGER_PATH: "{{ ansible_facts['user_dir'] }}/.tmux/plugins/"

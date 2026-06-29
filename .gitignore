@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Ansible retry files
+*.retry
+
+# Logs
+*.log
+
+# Never commit credentials or secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+*.ovpn
+roles/config/tasks/files/aws-vault.config
+roles/config/tasks/files/kubeconfig.yaml

@@ -1,0 +1,24 @@
+---
+- name: Install Neovim (Item 4)
+  community.general.homebrew:
+    name: neovim
+    state: present
+
+- name: Check if nvchad is alredy present
+  stat:
+    path: "{{ ansible_facts['user_dir'] }}/.config/nvim/lua"
+  register: nvim_config
+
+- name: Clone NvChad Starter
+  git:
+    repo: https://github.com/NvChad/starter
+    dest: "{{ ansible_facts['user_dir'] }}/.config/nvim"
+    depth: 1
+  when: not nvim_config.stat.exists
+
+- name: Ensuring GOPLS (LSP) is Enabled
+  replace:
+    path: "{{ ansible_facts['user_dir'] }}/.config/nvim/lua/configs/lspconfig.lua"
+    regexp: 'local servers = \{ "html", "cssls" \}'
+    replace: 'local servers = { "html", "cssls", "gopls" }' 
+

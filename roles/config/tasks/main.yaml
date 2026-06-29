@@ -1,0 +1,32 @@
+---
+# IMPORTANT: This role only installs empty *example* templates for AWS and
+# Kubernetes configs. Never put real credentials in the files tracked by this
+# repository; see .gitignore and the repository README for details.
+
+- name: Create .aws folder
+  file:
+    path: "{{ ansible_facts['user_dir'] }}/.aws"
+    state: directory
+    mode: '0755'
+
+- name: Install AWS config example
+  copy:
+    src: aws-config.example
+    dest: "{{ ansible_facts['user_dir'] }}/.aws/config"
+    mode: '0600'
+    backup: yes
+    force: no
+
+- name: Create .kube folder
+  file:
+    path: "{{ ansible_facts['user_dir'] }}/.kube"
+    state: directory
+    mode: '0755'
+
+- name: Install Kubernetes config example
+  copy:
+    src: kubeconfig.example
+    dest: "{{ ansible_facts['user_dir'] }}/.kube/config"
+    mode: '0600'
+    backup: yes
+    force: no
