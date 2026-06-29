@@ -3,6 +3,7 @@
   community.general.homebrew_cask:
     name: font-meslo-lg-nerd-font
     state: present
+    path: "/opt/workbrew/bin:/opt/homebrew/bin:/usr/local/bin"
 
 - name: Create Alacritty config dir
   file:

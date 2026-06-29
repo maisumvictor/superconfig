@@ -1,15 +1,27 @@
 ---
+# On Workbrew-managed Macs the real `brew` wrapper lives in /opt/workbrew/bin.
+# We put that directory first so Ansible uses it when present, but fall back to
+# normal Homebrew locations on personal machines.
 - name: Updating Homebrew
   community.general.homebrew:
     update_homebrew: yes
+    path: "/opt/workbrew/bin:/opt/homebrew/bin:/usr/local/bin"
 
-- name: Add Tap for tfswitch
+- name: Add third-party taps
   community.general.homebrew_tap:
-    name: warrensbox/tap
+    name: "{{ item }}"
     state: present
+    path: "/opt/workbrew/bin:/opt/homebrew/bin:/usr/local/bin"
+  loop:
+    - warrensbox/tap
+    - hashicorp/tap
+    - charmbracelet/tap
+    - hjr265/gittop
+    - huseyinbabal/tap
 
 - name: Essentials (CLI)
   community.general.homebrew:
+    path: "/opt/workbrew/bin:/opt/homebrew/bin:/usr/local/bin"
     name:
       # shell / terminal utilities
       - bash
@@ -26,14 +38,14 @@
 
       # version control
       - git
-      - gittop
+      - hjr265/gittop/gittop
 
       # cloud CLIs
       - awscli
       - aws-vault
       - azure-cli
       - doctl
-      - taws
+      - huseyinbabal/tap/taws
 
       # containers / kubernetes
       - helm
@@ -46,7 +58,7 @@
       - velero
 
       # infrastructure as code
-      - terraform
+      - hashicorp/tap/terraform
       - terraform-ls
 #      - tfswitch  # Enable only if needed. Disable terraform first.
 
@@ -67,7 +79,7 @@
       - task
       - taskwarrior-tui
       - wtfutil
-      - crush
+      - charmbracelet/tap/crush
 
       # language servers (used by Neovim)
       - gopls

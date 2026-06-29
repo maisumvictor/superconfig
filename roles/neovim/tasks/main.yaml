@@ -1,8 +1,9 @@
 ---
-- name: Install Neovim (Item 4)
+- name: Install Neovim
   community.general.homebrew:
     name: neovim
     state: present
+    path: "/opt/workbrew/bin:/opt/homebrew/bin:/usr/local/bin"
 
 - name: Check if nvchad is alredy present
   stat:
